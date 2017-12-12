@@ -158,8 +158,7 @@ class InvisibleRecaptchaCheckForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $config = \Drupal::service('config.factory')
-      ->getEditable('invisible_recaptcha.recaptcha_points');
+    $config = $this->configFactory->getEditable('invisible_recaptcha.recaptcha_points');
     $form = $form_state->getValue('form-ids');
     $config->set('forms_ids', $form['fields'])->save();
   }

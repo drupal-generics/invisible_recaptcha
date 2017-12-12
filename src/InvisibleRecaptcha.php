@@ -2,8 +2,6 @@
 
 namespace Drupal\invisible_recaptcha;
 
-use Drupal\Core\State\StateInterface;
-
 /**
  * Manages the invisible recaptcha actions.
  */
