@@ -7,7 +7,7 @@ php:
 env:
   global:
     - MODULE_NAME='invisible_recaptcha'
-#    - MODULE_TEST_GROUP='invisible_recaptcha'
+    - MODULE_TEST_GROUP='invisible_recaptcha'
     - DRUPAL_VERSION='^8.4.0'
 
 cache:
@@ -63,4 +63,5 @@ before_script:
 
 script:
   - phpcs --report=full --standard=Drupal,DrupalPractice $TRAVIS_BUILD_DIR/drupal/modules/$MODULE_NAME
-  - if [ $MODULE_TEST_GROUP ] ; then php $TRAVIS_BUILD_DIR/drupal/core/scripts/run-tests.sh --php `which php` --concurrency 12 --url http://127.0.0.1:8080 --color "$MODULE_TEST_GROUP"; fi
+  # Run the tests.
+  - if [ $MODULE_TEST_GROUP ] ; then php $TRAVIS_BUILD_DIR/drupal/core/scripts/run-tests.sh --php `which php` --concurrency 12 --url http://127.0.0.1:8080 --color "$MODULE_TEST_GROUP" ; fi

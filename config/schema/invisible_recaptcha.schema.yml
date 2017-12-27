@@ -3,5 +3,8 @@ invisible_recaptcha.recaptcha_points:
   label: 'Invisible recaptcha check'
   mapping:
     forms_ids:
-      type: array
+      type: sequence
       label: 'The ids of the forms.'
+      sequence:
+        type: string
+        label: 'The id of the form.'

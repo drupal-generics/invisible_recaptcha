@@ -17,11 +17,11 @@ function invisible_recaptcha_form_alter(&$form, FormStateInterface $form_state, 
 
   // Gets the form ids form the invisible recaptcha configurations.
   $config = \Drupal::service('config.factory')
-    ->getEditable('invisible_recaptcha.recaptcha_points');
+    ->get('invisible_recaptcha.recaptcha_points');
   $forms_ids = $config->get('forms_ids');
 
   // Modifies the current form if it is in the configurations.
-  if (in_array($form_id, $forms_ids)) {
+  if (is_array($forms_ids) && in_array($form_id, $forms_ids)) {
     $form['#attached']['library'][] = 'invisible_recaptcha/invisible_recaptcha';
     $form['#validate'][] = '_contact_form_validation';
 
@@ -35,7 +35,6 @@ function invisible_recaptcha_form_alter(&$form, FormStateInterface $form_state, 
         'data-callback' => "recaptcha_callback",
         'data-size' => "invisible",
       ],
-
     ];
 
   }
@@ -51,12 +50,14 @@ function invisible_recaptcha_form_alter(&$form, FormStateInterface $form_state, 
  */
 function _contact_form_validation(array &$form, FormStateInterface $form_state) {
   $state = \Drupal::service('state');
-  $invisible_recaptcha = new InvisibleRecaptcha($state);
+  $invisible_recaptcha = new InvisibleRecaptcha();
   $secret_key = $state->get('invisible_recaptcha.secret_key');
-  $recaptcha_validation = $invisible_recaptcha->validateInvisibleRecaptchaCode($secret_key);
+  if (!empty($secret_key)) {
+    $recaptcha_validation = $invisible_recaptcha->validateInvisibleRecaptchaCode($secret_key);
+  }
 
   // Sets an error if the recaptcha validation fails.
-  if (!$recaptcha_validation) {
+  if (empty($recaptcha_validation) || !$recaptcha_validation) {
     $form_state->setErrorByName("recaptcha", "Captcha validation failed.");
   }
 }
