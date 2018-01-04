@@ -32,7 +32,7 @@ function invisible_recaptcha_form_alter(&$form, FormStateInterface $form_state, 
       '#attributes' => [
         'class' => "g-recaptcha",
         'data-sitekey' => $site_key,
-        'data-callback' => "recaptcha_callback",
+        'data-callback' => "recaptchaCallback",
         'data-size' => "invisible",
       ],
     ];

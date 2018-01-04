@@ -29,3 +29,9 @@ Here you must set the site key and the secret key and save the configurations.
 **Invisible reCAPTCHA checks** from the **INVISIBLE RECAPTCHA** tab.
 2. Add the id of the form and click Save.
 **If you want to delete a form id, clear the textfield and click Save**.
+
+
+## Development steps to transpile ES6 javascript.
+npm install --save-dev babel-cli babel-core \
+babel-preset-env babel-plugin-add-header-comment
+npm run build:js
