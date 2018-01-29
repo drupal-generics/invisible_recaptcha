@@ -1,0 +1,7 @@
+invisible_recaptcha_test.test_form:
+  path: '/tests/invisible_recaptcha_test_form'
+  defaults:
+    _form: '\Drupal\invisible_recaptcha_test\Form\InvisibleRecaptchaTestForm'
+    _title: 'Invisible Recaptcha test page'
+  requirements:
+    _permission: 'administer site configuration'

@@ -7,7 +7,7 @@ php:
 env:
   global:
     - MODULE_NAME='invisible_recaptcha'
-#    - MODULE_TEST_GROUP='invisible_recaptcha'
+    - MODULE_TEST_GROUP='invisible_recaptcha'
     - DRUPAL_VERSION='^8.4.0'
 
 cache:
@@ -39,6 +39,11 @@ install:
   # Basic PHP packages.
   - sudo apt-get install -y --force-yes php5-cgi php5-mysql
 
+  # NodeJS, NPM, ESLint
+  - sudo apt-get install -y --force-yes npm
+  - sudo npm i -g eslint && sudo ln -s /usr/bin/nodejs /usr/bin/node
+  - sudo npm i -g eslint-config-airbnb
+
   # Move the checked out module into the correct structure.
   - mkdir /tmp/$MODULE_NAME
   - mv * /tmp/$MODULE_NAME/
@@ -63,4 +68,8 @@ before_script:
 
 script:
   - phpcs --report=full --standard=Drupal,DrupalPractice $TRAVIS_BUILD_DIR/drupal/modules/$MODULE_NAME
-  - if [ $MODULE_TEST_GROUP ] ; then php $TRAVIS_BUILD_DIR/drupal/core/scripts/run-tests.sh --php `which php` --concurrency 12 --url http://127.0.0.1:8080 --color "$MODULE_TEST_GROUP"; fi
+  - cd $TRAVIS_BUILD_DIR/drupal/modules/$MODULE_NAME/js
+  - ls . | grep '.*\.es6\.js' | xargs eslint --color -c $TRAVIS_BUILD_DIR/drupal/core/.eslintrc.json
+  - cd $TRAVIS_BUILD_DIR/drupal
+  # Run the tests.
+  - if [ $MODULE_TEST_GROUP ] ; then php $TRAVIS_BUILD_DIR/drupal/core/scripts/run-tests.sh --php `which php` --concurrency 12 --url http://127.0.0.1:8080 --color "$MODULE_TEST_GROUP" ; fi
