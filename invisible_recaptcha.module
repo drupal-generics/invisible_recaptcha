@@ -13,30 +13,32 @@ use Drupal\invisible_recaptcha\InvisibleRecaptcha;
  */
 function invisible_recaptcha_form_alter(&$form, FormStateInterface $form_state, $form_id) {
   $state = \Drupal::service('state');
-  $site_key = $state->get('invisible_recaptcha.site_key');
+  // Only attach recaptcha if it is enabled on the site.
+  if (!empty($state->get('invisible_recaptcha.enabled'))) {
+    $site_key = $state->get('invisible_recaptcha.site_key');
+    // Gets the form ids form the invisible recaptcha configurations.
+    $config = \Drupal::service('config.factory')
+      ->getEditable('invisible_recaptcha.recaptcha_points');
+    $forms_ids = $config->get('forms_ids');
 
-  // Gets the form ids form the invisible recaptcha configurations.
-  $config = \Drupal::service('config.factory')
-    ->get('invisible_recaptcha.recaptcha_points');
-  $forms_ids = $config->get('forms_ids');
+    // Modifies the current form if it is in the configurations.
+    if (in_array($form_id, $forms_ids)) {
+      $form['#attached']['library'][] = 'invisible_recaptcha/invisible_recaptcha';
+      $form['#validate'][] = '_contact_form_validation';
 
-  // Modifies the current form if it is in the configurations.
-  if (is_array($forms_ids) && in_array($form_id, $forms_ids)) {
-    $form['#attached']['library'][] = 'invisible_recaptcha/invisible_recaptcha';
-    $form['#validate'][] = '_contact_form_validation';
+      // Adds a div for invisible recaptcha client side integration.
+      $form['recaptcha-container'] = [
+        '#type' => 'container',
+        '#markup' => '',
+        '#attributes' => [
+          'class' => "g-recaptcha",
+          'data-sitekey' => $site_key,
+          'data-callback' => "recaptcha_callback",
+          'data-size' => "invisible",
+        ],
 
-    // Adds a div for invisible recaptcha client side integration.
-    $form['recaptcha-container'] = [
-      '#type' => 'container',
-      '#markup' => '',
-      '#attributes' => [
-        'class' => "g-recaptcha",
-        'data-sitekey' => $site_key,
-        'data-callback' => "recaptchaCallback",
-        'data-size' => "invisible",
-      ],
-    ];
-
+      ];
+    }
   }
 }
 
