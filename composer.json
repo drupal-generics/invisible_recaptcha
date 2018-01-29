@@ -1,0 +1,7 @@
+{
+  "name": "drupal-generics/invisible_recaptcha",
+  "description": "Provides invisible recaptcha implementation.",
+  "type": "drupal-module",
+  "license": "GPL-2.0+",
+  "require": {}
+}
