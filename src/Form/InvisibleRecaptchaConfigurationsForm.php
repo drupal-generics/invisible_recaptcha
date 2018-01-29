@@ -62,6 +62,13 @@ class InvisibleRecaptchaConfigurationsForm extends FormBase {
       '#default_value' => $this->state->get('invisible_recaptcha.secret_key'),
     ];
 
+    $form['enabled'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Enable recaptcha'),
+      '#description' => $this->t('Check this box to enable recaptcha on your site.'),
+      '#default_value' => $this->state->get('invisible_recaptcha.enabled'),
+    ];
+
     $form['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Save configurations'),
@@ -77,8 +84,10 @@ class InvisibleRecaptchaConfigurationsForm extends FormBase {
     // Saves the site and the secret keys in state.
     $this->state->set('invisible_recaptcha.site_key', $form_state->getValue('site-key'));
     $this->state->set('invisible_recaptcha.secret_key', $form_state->getValue('secret-key'));
+    $this->state->set('invisible_recaptcha.enabled', $form_state->getValue('enabled'));
 
     drupal_set_message($this->t('The settings have been successfully saved!'));
   }
 
 }
+
